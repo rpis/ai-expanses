@@ -1,0 +1,30 @@
+<div class="expenses-container">
+  <h2>Expenses</h2>
+
+  @if (expenses().length === 0) {
+    <p class="no-expenses">No expenses found.</p>
+  } @else {
+    <table class="expenses-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Category</th>
+          <th>Bank</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (expense of expenses(); track expense.id) {
+          <tr>
+            <td>{{ expense.date | date:'shortDate' }}</td>
+            <td>{{ expense.amount | currency }}</td>
+            <td>{{ getCategoryName(expense.categoryId) }}</td>
+            <td>{{ getBankName(expense.bankId) }}</td>
+            <td>{{ expense.notes }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

@@ -30,7 +30,10 @@ jobs:
         run: npm ci
 
       - name: Build project
-        run: npm run build -- --base-href /${{ github.event.repository.name }}/
+        run: |
+          REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+          npm run build -- --base-href /$REPO_NAME/
+          touch ./dist/expense-tracker/browser/.nojekyll
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
