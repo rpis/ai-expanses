@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ExpensesList } from './expenses-list';
 import { DatabaseService } from '../database/database';
+import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
 
 describe('ExpensesList', () => {
@@ -17,6 +18,7 @@ describe('ExpensesList', () => {
     await TestBed.configureTestingModule({
       imports: [ExpensesList],
       providers: [
+        provideRouter([]),
         { provide: DatabaseService, useValue: mockDbService }
       ]
     }).compileComponents();
