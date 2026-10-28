@@ -1,0 +1,39 @@
+.expenses-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.no-expenses {
+  color: #666;
+  font-style: italic;
+}
+
+.expenses-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.expenses-table th,
+.expenses-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.expenses-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  color: #333;
+}
+
+.expenses-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
