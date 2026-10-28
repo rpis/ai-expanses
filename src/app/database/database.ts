@@ -19,6 +19,15 @@ export class DatabaseService extends Dexie {
       categories: '++id, name',
       banks: '++id, name'
     });
+
+    this.on('populate', () => {
+      this.categories.bulkAdd([
+        { name: 'Żywność' }
+      ]);
+      this.banks.bulkAdd([
+        { name: 'mBank' }
+      ]);
+    });
   }
 
   // Categories
@@ -46,5 +55,9 @@ export class DatabaseService extends Dexie {
 
   async addExpense(expense: Expense): Promise<number> {
     return this.expenses.add(expense);
+  }
+
+  async deleteExpense(id: number): Promise<void> {
+    return this.expenses.delete(id);
   }
 }

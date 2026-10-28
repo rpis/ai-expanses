@@ -1,0 +1,63 @@
+<div class="expenses-container">
+  <div class="toolbar">
+    <h2>Expenses</h2>
+    <div class="actions">
+      <button
+        class="btn btn-danger"
+        (click)="deleteSelected()"
+        [disabled]="selectedExpenses().size === 0">
+        Usuń wybrane
+      </button>
+      <a class="btn btn-primary" routerLink="/new">Nowy wydatek</a>
+    </div>
+  </div>
+
+  @if (expenses().length === 0) {
+    <p class="no-expenses">No expenses found.</p>
+  } @else {
+    <table class="expenses-table">
+      <thead>
+        <tr>
+          <th class="checkbox-cell">
+            <input
+              type="checkbox"
+              [checked]="isAllSelected()"
+              (change)="toggleAll($event)">
+          </th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th class="hide-mobile">Category</th>
+          <th class="hide-mobile">Bank</th>
+          <th class="hide-mobile">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (expense of expenses(); track expense.id) {
+          <tr>
+            <td class="checkbox-cell">
+              <input
+                type="checkbox"
+                [checked]="selectedExpenses().has(expense.id!)"
+                (change)="toggleSelection(expense.id!, $event)">
+            </td>
+            <td>
+              <div class="mobile-main">
+                {{ expense.date | date:'shortDate' }}
+                <div class="mobile-sub hide-desktop">
+                  {{ getCategoryName(expense.categoryId) }} - {{ getBankName(expense.bankId) }}
+                </div>
+              </div>
+            </td>
+            <td>
+              <strong>{{ expense.amount | currency }}</strong>
+              <div class="mobile-sub hide-desktop notes-sub">{{ expense.notes }}</div>
+            </td>
+            <td class="hide-mobile">{{ getCategoryName(expense.categoryId) }}</td>
+            <td class="hide-mobile">{{ getBankName(expense.bankId) }}</td>
+            <td class="hide-mobile">{{ expense.notes }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
