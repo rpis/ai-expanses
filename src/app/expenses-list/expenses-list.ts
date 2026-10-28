@@ -5,11 +5,16 @@ import { DatabaseService } from '../database/database';
 import { Expense } from '../models/expense.model';
 import { Category } from '../models/category.model';
 import { Bank } from '../models/bank.model';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-expenses-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MatTableModule, MatButtonModule, MatCheckboxModule, MatIconModule, MatToolbarModule],
   templateUrl: './expenses-list.html',
   styleUrl: './expenses-list.css',
 })
@@ -20,6 +25,7 @@ export class ExpensesList implements OnInit {
   categories = signal<Map<number, string>>(new Map());
   banks = signal<Map<number, string>>(new Map());
   selectedExpenses = signal<Set<number>>(new Set());
+  displayedColumns: string[] = ['select', 'date', 'amount', 'category', 'bank', 'notes'];
 
   async ngOnInit() {
     await this.loadData();
@@ -55,21 +61,17 @@ export class ExpensesList implements OnInit {
     return this.banks().get(id) || 'Unknown Bank';
   }
 
-  toggleSelection(id: number, event: Event) {
-    const isChecked = (event.target as HTMLInputElement).checked;
+  toggleSelection(id: number, isChecked: boolean) {
     const currentSelected = new Set(this.selectedExpenses());
-
     if (isChecked) {
       currentSelected.add(id);
     } else {
       currentSelected.delete(id);
     }
-
     this.selectedExpenses.set(currentSelected);
   }
 
-  toggleAll(event: Event) {
-    const isChecked = (event.target as HTMLInputElement).checked;
+  toggleAll(isChecked: boolean) {
     if (isChecked) {
       const allIds = this.expenses()
         .map(e => e.id)

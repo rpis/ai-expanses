@@ -5,11 +5,31 @@ import { FormsModule } from '@angular/forms';
 import { DatabaseService } from '../database/database';
 import { Category } from '../models/category.model';
 import { Bank } from '../models/bank.model';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-expense-form',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  providers: [provideNativeDateAdapter()],
+  imports: [
+    CommonModule,
+    RouterLink,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatDatepickerModule
+  ],
   templateUrl: './expense-form.html',
   styleUrl: './expense-form.css',
 })
@@ -20,7 +40,7 @@ export class ExpenseForm implements OnInit {
   categories: Category[] = [];
   banks: Bank[] = [];
 
-  date: string = new Date().toISOString().substring(0, 10);
+  date: Date = new Date();
   amount: number | null = null;
   categoryId: number | null = null;
   bankId: number | null = null;
@@ -40,7 +60,7 @@ export class ExpenseForm implements OnInit {
     }
 
     await this.databaseService.addExpense({
-      date: new Date(this.date).toISOString(),
+      date: this.date.toISOString(),
       amount: this.amount,
       categoryId: this.categoryId,
       bankId: this.bankId,
