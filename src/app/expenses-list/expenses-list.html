@@ -1,63 +1,76 @@
 <div class="expenses-container">
-  <div class="toolbar">
-    <h2>Expenses</h2>
+  <mat-toolbar color="primary" class="toolbar">
+    <span>Wydatki</span>
+    <span class="spacer"></span>
     <div class="actions">
-      <button
-        class="btn btn-danger"
-        (click)="deleteSelected()"
-        [disabled]="selectedExpenses().size === 0">
-        Usuń wybrane
+      <button mat-stroked-button color="warn" (click)="deleteSelected()" [disabled]="selectedExpenses().size === 0">
+        <mat-icon>delete</mat-icon> Usuń wybrane
       </button>
-      <a class="btn btn-primary" routerLink="/new">Nowy wydatek</a>
+      <a mat-flat-button color="accent" routerLink="/new">
+        <mat-icon>add</mat-icon> Nowy wydatek
+      </a>
     </div>
-  </div>
+  </mat-toolbar>
 
   @if (expenses().length === 0) {
-    <p class="no-expenses">No expenses found.</p>
+    <p class="no-expenses">Nie znaleziono żadnych wydatków.</p>
   } @else {
-    <table class="expenses-table">
-      <thead>
-        <tr>
-          <th class="checkbox-cell">
-            <input
-              type="checkbox"
-              [checked]="isAllSelected()"
-              (change)="toggleAll($event)">
+    <div class="table-responsive">
+      <table mat-table [dataSource]="expenses()" class="mat-elevation-z2">
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? toggleAll($event.checked) : null"
+                          [checked]="isAllSelected()"
+                          color="primary">
+            </mat-checkbox>
           </th>
-          <th>Date</th>
-          <th>Amount</th>
-          <th class="hide-mobile">Category</th>
-          <th class="hide-mobile">Bank</th>
-          <th class="hide-mobile">Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (expense of expenses(); track expense.id) {
-          <tr>
-            <td class="checkbox-cell">
-              <input
-                type="checkbox"
-                [checked]="selectedExpenses().has(expense.id!)"
-                (change)="toggleSelection(expense.id!, $event)">
-            </td>
-            <td>
-              <div class="mobile-main">
-                {{ expense.date | date:'shortDate' }}
-                <div class="mobile-sub hide-desktop">
-                  {{ getCategoryName(expense.categoryId) }} - {{ getBankName(expense.bankId) }}
-                </div>
+          <td mat-cell *matCellDef="let expense">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? toggleSelection(expense.id!, $event.checked) : null"
+                          [checked]="selectedExpenses().has(expense.id!)"
+                          color="primary">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef> Data </th>
+          <td mat-cell *matCellDef="let expense">
+            <div class="mobile-main">
+              {{ expense.date | date:'shortDate' }}
+              <div class="mobile-sub hide-desktop">
+                {{ getCategoryName(expense.categoryId) }} - {{ getBankName(expense.bankId) }}
               </div>
-            </td>
-            <td>
-              <strong>{{ expense.amount | currency }}</strong>
-              <div class="mobile-sub hide-desktop notes-sub">{{ expense.notes }}</div>
-            </td>
-            <td class="hide-mobile">{{ getCategoryName(expense.categoryId) }}</td>
-            <td class="hide-mobile">{{ getBankName(expense.bankId) }}</td>
-            <td class="hide-mobile">{{ expense.notes }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef> Kwota </th>
+          <td mat-cell *matCellDef="let expense">
+            <strong>{{ expense.amount | currency }}</strong>
+            <div class="mobile-sub hide-desktop notes-sub">{{ expense.notes }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef class="hide-mobile"> Kategoria </th>
+          <td mat-cell *matCellDef="let expense" class="hide-mobile"> {{ getCategoryName(expense.categoryId) }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="bank">
+          <th mat-header-cell *matHeaderCellDef class="hide-mobile"> Bank </th>
+          <td mat-cell *matCellDef="let expense" class="hide-mobile"> {{ getBankName(expense.bankId) }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="notes">
+          <th mat-header-cell *matHeaderCellDef class="hide-mobile"> Notatki </th>
+          <td mat-cell *matCellDef="let expense" class="hide-mobile"> {{ expense.notes }} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
   }
 </div>

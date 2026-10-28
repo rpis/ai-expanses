@@ -1,47 +1,64 @@
 <div class="form-container">
-  <div class="toolbar">
-    <h2>Nowy wydatek</h2>
-    <a class="btn btn-secondary" routerLink="/">Anuluj</a>
-  </div>
+  <mat-toolbar color="primary" class="toolbar">
+    <span>Nowy wydatek</span>
+    <span class="spacer"></span>
+    <a mat-stroked-button routerLink="/">
+      <mat-icon>close</mat-icon> Anuluj
+    </a>
+  </mat-toolbar>
 
-  <form (ngSubmit)="saveExpense()" #expenseForm="ngForm">
+  <form (ngSubmit)="saveExpense()" #expenseForm="ngForm" class="mat-elevation-z2 form-body">
     <div class="form-group">
-      <label for="date">Data</label>
-      <input type="date" id="date" name="date" [(ngModel)]="date" required>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Data</mat-label>
+        <input matInput [matDatepicker]="picker" name="date" [(ngModel)]="date" required>
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
     </div>
 
     <div class="form-group">
-      <label for="amount">Kwota</label>
-      <input type="number" id="amount" name="amount" [(ngModel)]="amount" required min="0.01" step="0.01">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Kwota</mat-label>
+        <input matInput type="number" name="amount" [(ngModel)]="amount" required min="0.01" step="0.01">
+        <span matTextPrefix>PLN &nbsp;</span>
+      </mat-form-field>
     </div>
 
     <div class="form-group">
-      <label for="category">Kategoria</label>
-      <select id="category" name="category" [(ngModel)]="categoryId" required>
-        <option [ngValue]="null" disabled>Wybierz kategorię</option>
-        @for (cat of categories; track cat.id) {
-          <option [ngValue]="cat.id">{{ cat.name }}</option>
-        }
-      </select>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Kategoria</mat-label>
+        <mat-select name="category" [(ngModel)]="categoryId" required>
+          @for (cat of categories; track cat.id) {
+            <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <div class="form-group">
-      <label for="bank">Bank / Konto</label>
-      <select id="bank" name="bank" [(ngModel)]="bankId" required>
-        <option [ngValue]="null" disabled>Wybierz bank</option>
-        @for (bank of banks; track bank.id) {
-          <option [ngValue]="bank.id">{{ bank.name }}</option>
-        }
-      </select>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Bank / Konto</mat-label>
+        <mat-select name="bank" [(ngModel)]="bankId" required>
+          @for (bank of banks; track bank.id) {
+            <mat-option [value]="bank.id">{{ bank.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <div class="form-group">
-      <label for="notes">Notatki (opcjonalnie)</label>
-      <textarea id="notes" name="notes" [(ngModel)]="notes" rows="3"></textarea>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Notatki (opcjonalnie)</mat-label>
+        <textarea matInput name="notes" [(ngModel)]="notes" rows="3"></textarea>
+      </mat-form-field>
     </div>
 
     <div class="actions" style="margin-top: 20px;">
-      <button type="submit" class="btn btn-primary" [disabled]="!expenseForm.form.valid">Zapisz wydatek</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="!expenseForm.form.valid" class="full-width">
+        <mat-icon>save</mat-icon> Zapisz wydatek
+      </button>
     </div>
   </form>
 </div>
